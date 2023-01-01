@@ -11,6 +11,7 @@ import {
   addListener,
   assign,
   forEach,
+  forEachAsync,
   getImageNameFromURL,
   getImageNaturalSizes,
   getTransforms,
@@ -23,10 +24,10 @@ import {
 } from './utilities';
 
 export default {
-  render() {
+  async render() {
     this.initContainer();
     this.initViewer();
-    this.initList();
+    await this.initList();
     this.renderViewer();
   },
 
@@ -73,17 +74,17 @@ export default {
     }
   },
 
-  initList() {
+  async initList() {
     const { element, options, list } = this;
     const items = [];
 
     // initList may be called in this.update, so should keep idempotent
     list.innerHTML = '';
 
-    forEach(this.images, (image, index) => {
+    await forEachAsync(this.images, async (image, index) => {
       const { src } = image;
       const alt = image.alt || getImageNameFromURL(src);
-      const url = this.getImageURL(image);
+      const url = await this.getImageURL(image);
 
       if (src || url) {
         const item = document.createElement('li');

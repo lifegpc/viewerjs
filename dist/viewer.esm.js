@@ -5,7 +5,7 @@
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2022-11-06T05:18:19.939Z
+ * Date: 2023-01-01T03:19:19.791Z
  */
 
 function ownKeys(object, enumerableOnly) {
@@ -29,6 +29,312 @@ function _objectSpread2(target) {
   }
   return target;
 }
+function _regeneratorRuntime() {
+  _regeneratorRuntime = function () {
+    return exports;
+  };
+  var exports = {},
+    Op = Object.prototype,
+    hasOwn = Op.hasOwnProperty,
+    defineProperty = Object.defineProperty || function (obj, key, desc) {
+      obj[key] = desc.value;
+    },
+    $Symbol = "function" == typeof Symbol ? Symbol : {},
+    iteratorSymbol = $Symbol.iterator || "@@iterator",
+    asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator",
+    toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+  function define(obj, key, value) {
+    return Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: !0,
+      configurable: !0,
+      writable: !0
+    }), obj[key];
+  }
+  try {
+    define({}, "");
+  } catch (err) {
+    define = function (obj, key, value) {
+      return obj[key] = value;
+    };
+  }
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator,
+      generator = Object.create(protoGenerator.prototype),
+      context = new Context(tryLocsList || []);
+    return defineProperty(generator, "_invoke", {
+      value: makeInvokeMethod(innerFn, self, context)
+    }), generator;
+  }
+  function tryCatch(fn, obj, arg) {
+    try {
+      return {
+        type: "normal",
+        arg: fn.call(obj, arg)
+      };
+    } catch (err) {
+      return {
+        type: "throw",
+        arg: err
+      };
+    }
+  }
+  exports.wrap = wrap;
+  var ContinueSentinel = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  var IteratorPrototype = {};
+  define(IteratorPrototype, iteratorSymbol, function () {
+    return this;
+  });
+  var getProto = Object.getPrototypeOf,
+    NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype);
+  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function (method) {
+      define(prototype, method, function (arg) {
+        return this._invoke(method, arg);
+      });
+    });
+  }
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if ("throw" !== record.type) {
+        var result = record.arg,
+          value = result.value;
+        return value && "object" == typeof value && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) {
+          invoke("next", value, resolve, reject);
+        }, function (err) {
+          invoke("throw", err, resolve, reject);
+        }) : PromiseImpl.resolve(value).then(function (unwrapped) {
+          result.value = unwrapped, resolve(result);
+        }, function (error) {
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+      reject(record.arg);
+    }
+    var previousPromise;
+    defineProperty(this, "_invoke", {
+      value: function (method, arg) {
+        function callInvokeWithMethodAndArg() {
+          return new PromiseImpl(function (resolve, reject) {
+            invoke(method, arg, resolve, reject);
+          });
+        }
+        return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+      }
+    });
+  }
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = "suspendedStart";
+    return function (method, arg) {
+      if ("executing" === state) throw new Error("Generator is already running");
+      if ("completed" === state) {
+        if ("throw" === method) throw arg;
+        return doneResult();
+      }
+      for (context.method = method, context.arg = arg;;) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+        if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) {
+          if ("suspendedStart" === state) throw state = "completed", context.arg;
+          context.dispatchException(context.arg);
+        } else "return" === context.method && context.abrupt("return", context.arg);
+        state = "executing";
+        var record = tryCatch(innerFn, self, context);
+        if ("normal" === record.type) {
+          if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue;
+          return {
+            value: record.arg,
+            done: context.done
+          };
+        }
+        "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg);
+      }
+    };
+  }
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (undefined === method) {
+      if (context.delegate = null, "throw" === context.method) {
+        if (delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel;
+        context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method");
+      }
+      return ContinueSentinel;
+    }
+    var record = tryCatch(method, delegate.iterator, context.arg);
+    if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel;
+    var info = record.arg;
+    return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel);
+  }
+  function pushTryEntry(locs) {
+    var entry = {
+      tryLoc: locs[0]
+    };
+    1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry);
+  }
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal", delete record.arg, entry.completion = record;
+  }
+  function Context(tryLocsList) {
+    this.tryEntries = [{
+      tryLoc: "root"
+    }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0);
+  }
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) return iteratorMethod.call(iterable);
+      if ("function" == typeof iterable.next) return iterable;
+      if (!isNaN(iterable.length)) {
+        var i = -1,
+          next = function next() {
+            for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next;
+            return next.value = undefined, next.done = !0, next;
+          };
+        return next.next = next;
+      }
+    }
+    return {
+      next: doneResult
+    };
+  }
+  function doneResult() {
+    return {
+      value: undefined,
+      done: !0
+    };
+  }
+  return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", {
+    value: GeneratorFunctionPrototype,
+    configurable: !0
+  }), defineProperty(GeneratorFunctionPrototype, "constructor", {
+    value: GeneratorFunction,
+    configurable: !0
+  }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) {
+    var ctor = "function" == typeof genFun && genFun.constructor;
+    return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name));
+  }, exports.mark = function (genFun) {
+    return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun;
+  }, exports.awrap = function (arg) {
+    return {
+      __await: arg
+    };
+  }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+    return this;
+  }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    void 0 === PromiseImpl && (PromiseImpl = Promise);
+    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
+    return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) {
+      return result.done ? result.value : iter.next();
+    });
+  }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () {
+    return this;
+  }), define(Gp, "toString", function () {
+    return "[object Generator]";
+  }), exports.keys = function (val) {
+    var object = Object(val),
+      keys = [];
+    for (var key in object) keys.push(key);
+    return keys.reverse(), function next() {
+      for (; keys.length;) {
+        var key = keys.pop();
+        if (key in object) return next.value = key, next.done = !1, next;
+      }
+      return next.done = !0, next;
+    };
+  }, exports.values = values, Context.prototype = {
+    constructor: Context,
+    reset: function (skipTempReset) {
+      if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined);
+    },
+    stop: function () {
+      this.done = !0;
+      var rootRecord = this.tryEntries[0].completion;
+      if ("throw" === rootRecord.type) throw rootRecord.arg;
+      return this.rval;
+    },
+    dispatchException: function (exception) {
+      if (this.done) throw exception;
+      var context = this;
+      function handle(loc, caught) {
+        return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught;
+      }
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i],
+          record = entry.completion;
+        if ("root" === entry.tryLoc) return handle("end");
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc"),
+            hasFinally = hasOwn.call(entry, "finallyLoc");
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+            if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+          } else {
+            if (!hasFinally) throw new Error("try statement without catch or finally");
+            if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+          }
+        }
+      }
+    },
+    abrupt: function (type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+      finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null);
+      var record = finallyEntry ? finallyEntry.completion : {};
+      return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record);
+    },
+    complete: function (record, afterLoc) {
+      if ("throw" === record.type) throw record.arg;
+      return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel;
+    },
+    finish: function (finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel;
+      }
+    },
+    catch: function (tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if ("throw" === record.type) {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+      throw new Error("illegal catch attempt");
+    },
+    delegateYield: function (iterable, resultName, nextLoc) {
+      return this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      }, "next" === this.method && (this.arg = undefined), ContinueSentinel;
+    }
+  }, exports;
+}
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -37,6 +343,36 @@ function _typeof(obj) {
   } : function (obj) {
     return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
   }, _typeof(obj);
+}
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+      args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+      _next(undefined);
+    });
+  };
 }
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -371,7 +707,7 @@ function isString(value) {
 /**
  * Check if the given value is not a number.
  */
-var isNaN = Number.isNaN || WINDOW.isNaN;
+var isNaN$1 = Number.isNaN || WINDOW.isNaN;
 
 /**
  * Check if the given value is a number.
@@ -379,7 +715,7 @@ var isNaN = Number.isNaN || WINDOW.isNaN;
  * @returns {boolean} Returns `true` if the given value is a number, else `false`.
  */
 function isNumber(value) {
-  return typeof value === 'number' && !isNaN(value);
+  return typeof value === 'number' && !isNaN$1(value);
 }
 
 /**
@@ -454,11 +790,82 @@ function forEach(data, callback) {
 }
 
 /**
+ * Iterate the given data.
+ * @param {*} data - The data to iterate.
+ * @param {Function} callback - The process function for each element.
+ * @returns {*} The original data.
+ */
+function forEachAsync(_x, _x2) {
+  return _forEachAsync.apply(this, arguments);
+}
+
+/**
  * Extend the given object.
  * @param {*} obj - The object to be extended.
  * @param {*} args - The rest objects which will be merged to the first object.
  * @returns {Object} The extended object.
  */
+function _forEachAsync() {
+  _forEachAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data, callback) {
+    var length, i, re;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!(data && isFunction(callback))) {
+              _context.next = 18;
+              break;
+            }
+            if (!(Array.isArray(data) || isNumber(data.length) /* array-like */)) {
+              _context.next = 17;
+              break;
+            }
+            length = data.length;
+            i = 0;
+          case 4:
+            if (!(i < length)) {
+              _context.next = 15;
+              break;
+            }
+            re = callback.call(data, data[i], i, data);
+            if (!(re instanceof Promise)) {
+              _context.next = 10;
+              break;
+            }
+            _context.next = 9;
+            return re;
+          case 9:
+            re = _context.sent;
+          case 10:
+            if (!(re === false)) {
+              _context.next = 12;
+              break;
+            }
+            return _context.abrupt("break", 15);
+          case 12:
+            i += 1;
+            _context.next = 4;
+            break;
+          case 15:
+            _context.next = 18;
+            break;
+          case 17:
+            if (isObject(data)) {
+              Object.keys(data).forEach(function (key) {
+                callback.call(data, data[key], key, data);
+              });
+            }
+          case 18:
+            return _context.abrupt("return", data);
+          case 19:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _forEachAsync.apply(this, arguments);
+}
 var assign = Object.assign || function assign(obj) {
   for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
@@ -936,10 +1343,25 @@ function getPointersCenter(pointers) {
 
 var render = {
   render: function render() {
-    this.initContainer();
-    this.initViewer();
-    this.initList();
-    this.renderViewer();
+    var _this = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _this.initContainer();
+              _this.initViewer();
+              _context.next = 4;
+              return _this.initList();
+            case 4:
+              _this.renderViewer();
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   initBody: function initBody() {
     var ownerDocument = this.element.ownerDocument;
@@ -977,77 +1399,107 @@ var render = {
     }
   },
   initList: function initList() {
-    var _this = this;
-    var element = this.element,
-      options = this.options,
-      list = this.list;
-    var items = [];
-
-    // initList may be called in this.update, so should keep idempotent
-    list.innerHTML = '';
-    forEach(this.images, function (image, index) {
-      var src = image.src;
-      var alt = image.alt || getImageNameFromURL(src);
-      var url = _this.getImageURL(image);
-      if (src || url) {
-        var item = document.createElement('li');
-        var img = document.createElement('img');
-        forEach(options.inheritedAttributes, function (name) {
-          var value = image.getAttribute(name);
-          if (value !== null) {
-            img.setAttribute(name, value);
+    var _this2 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var element, options, list, items;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              element = _this2.element, options = _this2.options, list = _this2.list;
+              items = []; // initList may be called in this.update, so should keep idempotent
+              list.innerHTML = '';
+              _context3.next = 5;
+              return forEachAsync(_this2.images, /*#__PURE__*/function () {
+                var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(image, index) {
+                  var src, alt, url, item, img;
+                  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+                    while (1) {
+                      switch (_context2.prev = _context2.next) {
+                        case 0:
+                          src = image.src;
+                          alt = image.alt || getImageNameFromURL(src);
+                          _context2.next = 4;
+                          return _this2.getImageURL(image);
+                        case 4:
+                          url = _context2.sent;
+                          if (src || url) {
+                            item = document.createElement('li');
+                            img = document.createElement('img');
+                            forEach(options.inheritedAttributes, function (name) {
+                              var value = image.getAttribute(name);
+                              if (value !== null) {
+                                img.setAttribute(name, value);
+                              }
+                            });
+                            if (options.navbar) {
+                              img.src = src || url;
+                            }
+                            img.alt = alt;
+                            img.setAttribute('data-original-url', url || src);
+                            item.setAttribute('data-index', index);
+                            item.setAttribute('data-viewer-action', 'view');
+                            item.setAttribute('role', 'button');
+                            if (options.keyboard) {
+                              item.setAttribute('tabindex', 0);
+                            }
+                            item.appendChild(img);
+                            list.appendChild(item);
+                            items.push(item);
+                          }
+                        case 6:
+                        case "end":
+                          return _context2.stop();
+                      }
+                    }
+                  }, _callee2);
+                }));
+                return function (_x, _x2) {
+                  return _ref.apply(this, arguments);
+                };
+              }());
+            case 5:
+              _this2.items = items;
+              forEach(items, function (item) {
+                var image = item.firstElementChild;
+                var onLoad;
+                var onError;
+                setData(image, 'filled', true);
+                if (options.loading) {
+                  addClass(item, CLASS_LOADING);
+                }
+                addListener(image, EVENT_LOAD, onLoad = function onLoad(event) {
+                  removeListener(image, EVENT_ERROR, onError);
+                  if (options.loading) {
+                    removeClass(item, CLASS_LOADING);
+                  }
+                  _this2.loadImage(event);
+                }, {
+                  once: true
+                });
+                addListener(image, EVENT_ERROR, onError = function onError() {
+                  removeListener(image, EVENT_LOAD, onLoad);
+                  if (options.loading) {
+                    removeClass(item, CLASS_LOADING);
+                  }
+                }, {
+                  once: true
+                });
+              });
+              if (options.transition) {
+                addListener(element, EVENT_VIEWED, function () {
+                  addClass(list, CLASS_TRANSITION);
+                }, {
+                  once: true
+                });
+              }
+            case 8:
+            case "end":
+              return _context3.stop();
           }
-        });
-        if (options.navbar) {
-          img.src = src || url;
         }
-        img.alt = alt;
-        img.setAttribute('data-original-url', url || src);
-        item.setAttribute('data-index', index);
-        item.setAttribute('data-viewer-action', 'view');
-        item.setAttribute('role', 'button');
-        if (options.keyboard) {
-          item.setAttribute('tabindex', 0);
-        }
-        item.appendChild(img);
-        list.appendChild(item);
-        items.push(item);
-      }
-    });
-    this.items = items;
-    forEach(items, function (item) {
-      var image = item.firstElementChild;
-      var onLoad;
-      var onError;
-      setData(image, 'filled', true);
-      if (options.loading) {
-        addClass(item, CLASS_LOADING);
-      }
-      addListener(image, EVENT_LOAD, onLoad = function onLoad(event) {
-        removeListener(image, EVENT_ERROR, onError);
-        if (options.loading) {
-          removeClass(item, CLASS_LOADING);
-        }
-        _this.loadImage(event);
-      }, {
-        once: true
-      });
-      addListener(image, EVENT_ERROR, onError = function onError() {
-        removeListener(image, EVENT_LOAD, onLoad);
-        if (options.loading) {
-          removeClass(item, CLASS_LOADING);
-        }
-      }, {
-        once: true
-      });
-    });
-    if (options.transition) {
-      addListener(element, EVENT_VIEWED, function () {
-        addClass(list, CLASS_TRANSITION);
-      }, {
-        once: true
-      });
-    }
+      }, _callee3);
+    }))();
   },
   renderList: function renderList() {
     var index = this.index;
@@ -1076,7 +1528,7 @@ var render = {
     }));
   },
   initImage: function initImage(done) {
-    var _this2 = this;
+    var _this3 = this;
     var options = this.options,
       image = this.image,
       viewerData = this.viewerData;
@@ -1095,7 +1547,7 @@ var render = {
       var initialCoverage = Math.max(0, Math.min(1, options.initialCoverage));
       var width = viewerWidth;
       var height = viewerHeight;
-      _this2.imageInitializing = false;
+      _this3.imageInitializing = false;
       if (viewerHeight * aspectRatio > viewerWidth) {
         height = viewerWidth / aspectRatio;
       } else {
@@ -1130,15 +1582,15 @@ var render = {
         initialImageData.scaleX = 1;
         initialImageData.scaleY = 1;
       }
-      _this2.imageData = imageData;
-      _this2.initialImageData = initialImageData;
+      _this3.imageData = imageData;
+      _this3.initialImageData = initialImageData;
       if (done) {
         done();
       }
     });
   },
   renderImage: function renderImage(done) {
-    var _this3 = this;
+    var _this4 = this;
     var image = this.image,
       imageData = this.imageData;
     setStyle(image, assign({
@@ -1151,7 +1603,7 @@ var render = {
     if (done) {
       if ((this.viewing || this.moving || this.rotating || this.scaling || this.zooming) && this.options.transition && hasClass(image, CLASS_TRANSITION)) {
         var onTransitionEnd = function onTransitionEnd() {
-          _this3.imageRendering = false;
+          _this4.imageRendering = false;
           done();
         };
         this.imageRendering = {
@@ -1230,7 +1682,8 @@ var events = {
 var handlers = {
   click: function click(event) {
     var options = this.options,
-      imageData = this.imageData;
+      imageData = this.imageData,
+      ignoreCloseOnceMoved = this.ignoreCloseOnceMoved;
     var target = event.target;
     var action = getData(target, DATA_ACTION);
     if (!action && target.localName === 'img' && target.parentElement.localName === 'li') {
@@ -1257,7 +1710,9 @@ var handlers = {
         }
         break;
       case 'hide':
-        this.hide();
+        if (ignoreCloseOnceMoved !== true) {
+          this.hide();
+        }
         break;
       case 'view':
         this.view(getData(target, 'index'));
@@ -1530,7 +1985,8 @@ var handlers = {
     var _this2 = this;
     var options = this.options,
       action = this.action,
-      pointers = this.pointers;
+      pointers = this.pointers,
+      ignoreCloseOnceMoved = this.ignoreCloseOnceMoved;
     var pointer;
     if (event.changedTouches) {
       forEach(event.changedTouches, function (touch) {
@@ -1540,6 +1996,11 @@ var handlers = {
     } else {
       pointer = pointers[event.pointerId || 0];
       delete pointers[event.pointerId || 0];
+    }
+    if (ignoreCloseOnceMoved) {
+      setTimeout(function () {
+        _this2.ignoreCloseOnceMoved = false;
+      });
     }
     if (!action) {
       return;
@@ -1651,59 +2112,94 @@ var methods = {
    * @returns {Viewer} this
    */
   show: function show() {
-    var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var element = this.element,
-      options = this.options;
-    if (options.inline || this.showing || this.isShown || this.showing) {
-      return this;
-    }
-    if (!this.ready) {
-      this.build();
-      if (this.ready) {
-        this.show(immediate);
-      }
-      return this;
-    }
-    if (isFunction(options.show)) {
-      addListener(element, EVENT_SHOW, options.show, {
-        once: true
-      });
-    }
-    if (dispatchEvent(element, EVENT_SHOW) === false || !this.ready) {
-      return this;
-    }
-    if (this.hiding) {
-      this.transitioning.abort();
-    }
-    this.showing = true;
-    this.open();
-    var viewer = this.viewer;
-    removeClass(viewer, CLASS_HIDE);
-    viewer.setAttribute('role', 'dialog');
-    viewer.setAttribute('aria-labelledby', this.title.id);
-    viewer.setAttribute('aria-modal', true);
-    viewer.removeAttribute('aria-hidden');
-    if (options.transition && !immediate) {
-      var shown = this.shown.bind(this);
-      this.transitioning = {
-        abort: function abort() {
-          removeListener(viewer, EVENT_TRANSITION_END, shown);
-          removeClass(viewer, CLASS_IN);
-        }
-      };
-      addClass(viewer, CLASS_TRANSITION);
+    var _arguments = arguments,
+      _this = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var immediate, element, options, viewer, shown;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              immediate = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
+              element = _this.element, options = _this.options;
+              if (!(options.inline || _this.showing || _this.isShown || _this.showing)) {
+                _context.next = 4;
+                break;
+              }
+              return _context.abrupt("return", _this);
+            case 4:
+              if (_this.ready) {
+                _context.next = 11;
+                break;
+              }
+              _context.next = 7;
+              return _this.build();
+            case 7:
+              if (!_this.ready) {
+                _context.next = 10;
+                break;
+              }
+              _context.next = 10;
+              return _this.show(immediate);
+            case 10:
+              return _context.abrupt("return", _this);
+            case 11:
+              if (isFunction(options.show)) {
+                addListener(element, EVENT_SHOW, options.show, {
+                  once: true
+                });
+              }
+              if (!(dispatchEvent(element, EVENT_SHOW) === false || !_this.ready)) {
+                _context.next = 14;
+                break;
+              }
+              return _context.abrupt("return", _this);
+            case 14:
+              if (_this.hiding) {
+                _this.transitioning.abort();
+              }
+              _this.showing = true;
+              _this.open();
+              viewer = _this.viewer;
+              removeClass(viewer, CLASS_HIDE);
+              viewer.setAttribute('role', 'dialog');
+              viewer.setAttribute('aria-labelledby', _this.title.id);
+              viewer.setAttribute('aria-modal', true);
+              viewer.removeAttribute('aria-hidden');
+              if (!(options.transition && !immediate)) {
+                _context.next = 32;
+                break;
+              }
+              shown = _this.shown.bind(_this);
+              _this.transitioning = {
+                abort: function abort() {
+                  removeListener(viewer, EVENT_TRANSITION_END, shown);
+                  removeClass(viewer, CLASS_IN);
+                }
+              };
+              addClass(viewer, CLASS_TRANSITION);
 
-      // Force reflow to enable CSS3 transition
-      viewer.initialOffsetWidth = viewer.offsetWidth;
-      addListener(viewer, EVENT_TRANSITION_END, shown, {
-        once: true
-      });
-      addClass(viewer, CLASS_IN);
-    } else {
-      addClass(viewer, CLASS_IN);
-      this.shown();
-    }
-    return this;
+              // Force reflow to enable CSS3 transition
+              viewer.initialOffsetWidth = viewer.offsetWidth;
+              addListener(viewer, EVENT_TRANSITION_END, shown, {
+                once: true
+              });
+              addClass(viewer, CLASS_IN);
+              _context.next = 35;
+              break;
+            case 32:
+              addClass(viewer, CLASS_IN);
+              _context.next = 35;
+              return _this.shown();
+            case 35:
+              return _context.abrupt("return", _this);
+            case 36:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   /**
    * Hide the viewer (only available in modal mode)
@@ -1711,7 +2207,7 @@ var methods = {
    * @returns {Viewer} this
    */
   hide: function hide() {
-    var _this = this;
+    var _this2 = this;
     var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var element = this.element,
       options = this.options;
@@ -1739,14 +2235,14 @@ var methods = {
       image = this.image;
     var hideImmediately = function hideImmediately() {
       removeClass(viewer, CLASS_IN);
-      _this.hidden();
+      _this2.hidden();
     };
     if (options.transition && !immediate) {
       var onViewerTransitionEnd = function onViewerTransitionEnd(event) {
         // Ignore all propagating `transitionend` events (#275).
         if (event && event.target === viewer) {
           removeListener(viewer, EVENT_TRANSITION_END, onViewerTransitionEnd);
-          _this.hidden();
+          _this2.hidden();
         }
       };
       var onImageTransitionEnd = function onImageTransitionEnd() {
@@ -1760,7 +2256,7 @@ var methods = {
       };
       this.transitioning = {
         abort: function abort() {
-          if (_this.viewed && hasClass(image, CLASS_TRANSITION)) {
+          if (_this2.viewed && hasClass(image, CLASS_TRANSITION)) {
             removeListener(image, EVENT_TRANSITION_END, onImageTransitionEnd);
           } else if (hasClass(viewer, CLASS_TRANSITION)) {
             removeListener(viewer, EVENT_TRANSITION_END, onViewerTransitionEnd);
@@ -1789,138 +2285,159 @@ var methods = {
    * @returns {Viewer} this
    */
   view: function view() {
-    var _this2 = this;
-    var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.options.initialViewIndex;
-    index = Number(index) || 0;
-    if (this.hiding || this.played || index < 0 || index >= this.length || this.viewed && index === this.index) {
-      return this;
-    }
-    if (!this.isShown) {
-      this.index = index;
-      return this.show();
-    }
-    if (this.viewing) {
-      this.viewing.abort();
-    }
-    var element = this.element,
-      options = this.options,
-      title = this.title,
-      canvas = this.canvas;
-    var item = this.items[index];
-    var img = item.querySelector('img');
-    var url = getData(img, 'originalUrl');
-    var alt = img.getAttribute('alt');
-    var image = document.createElement('img');
-    forEach(options.inheritedAttributes, function (name) {
-      var value = img.getAttribute(name);
-      if (value !== null) {
-        image.setAttribute(name, value);
-      }
-    });
-    image.src = url;
-    image.alt = alt;
-    if (isFunction(options.view)) {
-      addListener(element, EVENT_VIEW, options.view, {
-        once: true
-      });
-    }
-    if (dispatchEvent(element, EVENT_VIEW, {
-      originalImage: this.images[index],
-      index: index,
-      image: image
-    }) === false || !this.isShown || this.hiding || this.played) {
-      return this;
-    }
-    var activeItem = this.items[this.index];
-    if (activeItem) {
-      removeClass(activeItem, CLASS_ACTIVE);
-      activeItem.removeAttribute('aria-selected');
-    }
-    addClass(item, CLASS_ACTIVE);
-    item.setAttribute('aria-selected', true);
-    if (options.focus) {
-      item.focus();
-    }
-    this.image = image;
-    this.viewed = false;
-    this.index = index;
-    this.imageData = {};
-    addClass(image, CLASS_INVISIBLE);
-    if (options.loading) {
-      addClass(canvas, CLASS_LOADING);
-    }
-    canvas.innerHTML = '';
-    canvas.appendChild(image);
+    var _arguments2 = arguments,
+      _this3 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var index, element, options, title, canvas, item, img, url, alt, image, activeItem, onViewed, onLoad, onError;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              index = _arguments2.length > 0 && _arguments2[0] !== undefined ? _arguments2[0] : _this3.options.initialViewIndex;
+              index = Number(index) || 0;
+              if (!(_this3.hiding || _this3.played || index < 0 || index >= _this3.length || _this3.viewed && index === _this3.index)) {
+                _context2.next = 4;
+                break;
+              }
+              return _context2.abrupt("return", _this3);
+            case 4:
+              if (_this3.isShown) {
+                _context2.next = 9;
+                break;
+              }
+              _this3.index = index;
+              _context2.next = 8;
+              return _this3.show();
+            case 8:
+              return _context2.abrupt("return", _context2.sent);
+            case 9:
+              if (_this3.viewing) {
+                _this3.viewing.abort();
+              }
+              element = _this3.element, options = _this3.options, title = _this3.title, canvas = _this3.canvas;
+              item = _this3.items[index];
+              img = item.querySelector('img');
+              url = getData(img, 'originalUrl');
+              alt = img.getAttribute('alt');
+              image = document.createElement('img');
+              forEach(options.inheritedAttributes, function (name) {
+                var value = img.getAttribute(name);
+                if (value !== null) {
+                  image.setAttribute(name, value);
+                }
+              });
+              image.src = url;
+              image.alt = alt;
+              if (isFunction(options.view)) {
+                addListener(element, EVENT_VIEW, options.view, {
+                  once: true
+                });
+              }
+              if (!(dispatchEvent(element, EVENT_VIEW, {
+                originalImage: _this3.images[index],
+                index: index,
+                image: image
+              }) === false || !_this3.isShown || _this3.hiding || _this3.played)) {
+                _context2.next = 22;
+                break;
+              }
+              return _context2.abrupt("return", _this3);
+            case 22:
+              activeItem = _this3.items[_this3.index];
+              if (activeItem) {
+                removeClass(activeItem, CLASS_ACTIVE);
+                activeItem.removeAttribute('aria-selected');
+              }
+              addClass(item, CLASS_ACTIVE);
+              item.setAttribute('aria-selected', true);
+              if (options.focus) {
+                item.focus();
+              }
+              _this3.image = image;
+              _this3.viewed = false;
+              _this3.index = index;
+              _this3.imageData = {};
+              addClass(image, CLASS_INVISIBLE);
+              if (options.loading) {
+                addClass(canvas, CLASS_LOADING);
+              }
+              canvas.innerHTML = '';
+              canvas.appendChild(image);
 
-    // Center current item
-    this.renderList();
+              // Center current item
+              _this3.renderList();
 
-    // Clear title
-    title.innerHTML = '';
+              // Clear title
+              title.innerHTML = '';
 
-    // Generate title after viewed
-    var onViewed = function onViewed() {
-      var imageData = _this2.imageData;
-      var render = Array.isArray(options.title) ? options.title[1] : options.title;
-      title.innerHTML = escapeHTMLEntities(isFunction(render) ? render.call(_this2, image, imageData) : "".concat(alt, " (").concat(imageData.naturalWidth, " \xD7 ").concat(imageData.naturalHeight, ")"));
-    };
-    var onLoad;
-    var onError;
-    addListener(element, EVENT_VIEWED, onViewed, {
-      once: true
-    });
-    this.viewing = {
-      abort: function abort() {
-        removeListener(element, EVENT_VIEWED, onViewed);
-        if (image.complete) {
-          if (_this2.imageRendering) {
-            _this2.imageRendering.abort();
-          } else if (_this2.imageInitializing) {
-            _this2.imageInitializing.abort();
+              // Generate title after viewed
+              onViewed = function onViewed() {
+                var imageData = _this3.imageData;
+                var render = Array.isArray(options.title) ? options.title[1] : options.title;
+                title.innerHTML = escapeHTMLEntities(isFunction(render) ? render.call(_this3, image, imageData) : "".concat(alt, " (").concat(imageData.naturalWidth, " \xD7 ").concat(imageData.naturalHeight, ")"));
+              };
+              addListener(element, EVENT_VIEWED, onViewed, {
+                once: true
+              });
+              _this3.viewing = {
+                abort: function abort() {
+                  removeListener(element, EVENT_VIEWED, onViewed);
+                  if (image.complete) {
+                    if (_this3.imageRendering) {
+                      _this3.imageRendering.abort();
+                    } else if (_this3.imageInitializing) {
+                      _this3.imageInitializing.abort();
+                    }
+                  } else {
+                    // Cancel download to save bandwidth.
+                    image.src = '';
+                    removeListener(image, EVENT_LOAD, onLoad);
+                    if (_this3.timeout) {
+                      clearTimeout(_this3.timeout);
+                    }
+                  }
+                }
+              };
+              if (image.complete) {
+                _this3.load();
+              } else {
+                addListener(image, EVENT_LOAD, onLoad = function onLoad() {
+                  removeListener(image, EVENT_ERROR, onError);
+                  _this3.load();
+                }, {
+                  once: true
+                });
+                addListener(image, EVENT_ERROR, onError = function onError() {
+                  removeListener(image, EVENT_LOAD, onLoad);
+                  if (_this3.timeout) {
+                    clearTimeout(_this3.timeout);
+                    _this3.timeout = false;
+                  }
+                  removeClass(image, CLASS_INVISIBLE);
+                  if (options.loading) {
+                    removeClass(_this3.canvas, CLASS_LOADING);
+                  }
+                }, {
+                  once: true
+                });
+                if (_this3.timeout) {
+                  clearTimeout(_this3.timeout);
+                }
+
+                // Make the image visible if it fails to load within 1s
+                _this3.timeout = setTimeout(function () {
+                  removeClass(image, CLASS_INVISIBLE);
+                  _this3.timeout = false;
+                }, 1000);
+              }
+              return _context2.abrupt("return", _this3);
+            case 42:
+            case "end":
+              return _context2.stop();
           }
-        } else {
-          // Cancel download to save bandwidth.
-          image.src = '';
-          removeListener(image, EVENT_LOAD, onLoad);
-          if (_this2.timeout) {
-            clearTimeout(_this2.timeout);
-          }
         }
-      }
-    };
-    if (image.complete) {
-      this.load();
-    } else {
-      addListener(image, EVENT_LOAD, onLoad = function onLoad() {
-        removeListener(image, EVENT_ERROR, onError);
-        _this2.load();
-      }, {
-        once: true
-      });
-      addListener(image, EVENT_ERROR, onError = function onError() {
-        removeListener(image, EVENT_LOAD, onLoad);
-        if (_this2.timeout) {
-          clearTimeout(_this2.timeout);
-          _this2.timeout = false;
-        }
-        removeClass(image, CLASS_INVISIBLE);
-        if (options.loading) {
-          removeClass(_this2.canvas, CLASS_LOADING);
-        }
-      }, {
-        once: true
-      });
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-      }
-
-      // Make the image visible if it fails to load within 1s
-      this.timeout = setTimeout(function () {
-        removeClass(image, CLASS_INVISIBLE);
-        _this2.timeout = false;
-      }, 1000);
-    }
-    return this;
+      }, _callee2);
+    }))();
   },
   /**
    * View the previous image
@@ -1929,13 +2446,30 @@ var methods = {
    * @returns {Viewer} this
    */
   prev: function prev() {
-    var loop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var index = this.index - 1;
-    if (index < 0) {
-      index = loop ? this.length - 1 : 0;
-    }
-    this.view(index);
-    return this;
+    var _arguments3 = arguments,
+      _this4 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var loop, index;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              loop = _arguments3.length > 0 && _arguments3[0] !== undefined ? _arguments3[0] : false;
+              index = _this4.index - 1;
+              if (index < 0) {
+                index = loop ? _this4.length - 1 : 0;
+              }
+              _context3.next = 5;
+              return _this4.view(index);
+            case 5:
+              return _context3.abrupt("return", _this4);
+            case 6:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
   },
   /**
    * View the next image
@@ -1944,14 +2478,31 @@ var methods = {
    * @returns {Viewer} this
    */
   next: function next() {
-    var loop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var maxIndex = this.length - 1;
-    var index = this.index + 1;
-    if (index > maxIndex) {
-      index = loop ? 0 : maxIndex;
-    }
-    this.view(index);
-    return this;
+    var _arguments4 = arguments,
+      _this5 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var loop, maxIndex, index;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              loop = _arguments4.length > 0 && _arguments4[0] !== undefined ? _arguments4[0] : false;
+              maxIndex = _this5.length - 1;
+              index = _this5.index + 1;
+              if (index > maxIndex) {
+                index = loop ? 0 : maxIndex;
+              }
+              _context4.next = 6;
+              return _this5.view(index);
+            case 6:
+              return _context4.abrupt("return", _this5);
+            case 7:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }))();
   },
   /**
    * Move the image with relative offsets.
@@ -1973,7 +2524,7 @@ var methods = {
    * @returns {Viewer} this
    */
   moveTo: function moveTo(x) {
-    var _this3 = this;
+    var _this6 = this;
     var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
     var _originalEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     var element = this.element,
@@ -2015,8 +2566,9 @@ var methods = {
         imageData.left = x;
         imageData.top = y;
         this.moving = true;
+        this.ignoreCloseOnceMoved = true;
         this.renderImage(function () {
-          _this3.moving = false;
+          _this6.moving = false;
           if (isFunction(options.moved)) {
             addListener(element, EVENT_MOVED, options.moved, {
               once: true
@@ -2051,7 +2603,7 @@ var methods = {
    * @returns {Viewer} this
    */
   rotateTo: function rotateTo(degree) {
-    var _this4 = this;
+    var _this7 = this;
     var element = this.element,
       options = this.options,
       imageData = this.imageData;
@@ -2072,7 +2624,7 @@ var methods = {
       imageData.rotate = degree;
       this.rotating = true;
       this.renderImage(function () {
-        _this4.rotating = false;
+        _this7.rotating = false;
         if (isFunction(options.rotated)) {
           addListener(element, EVENT_ROTATED, options.rotated, {
             once: true
@@ -2113,7 +2665,7 @@ var methods = {
    * @returns {Viewer} this
    */
   scale: function scale(scaleX) {
-    var _this5 = this;
+    var _this8 = this;
     var scaleY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : scaleX;
     var element = this.element,
       options = this.options,
@@ -2152,7 +2704,7 @@ var methods = {
         imageData.scaleY = scaleY;
         this.scaling = true;
         this.renderImage(function () {
-          _this5.scaling = false;
+          _this8.scaling = false;
           if (isFunction(options.scaled)) {
             addListener(element, EVENT_SCALED, options.scaled, {
               once: true
@@ -2203,7 +2755,7 @@ var methods = {
    * @returns {Viewer} this
    */
   zoomTo: function zoomTo(ratio) {
-    var _this6 = this;
+    var _this9 = this;
     var showTooltip = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var pivot = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     var _originalEvent = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -2284,7 +2836,7 @@ var methods = {
       imageData.oldRatio = oldRatio;
       imageData.ratio = ratio;
       this.renderImage(function () {
-        _this6.zooming = false;
+        _this9.zooming = false;
         if (isFunction(options.zoomed)) {
           addListener(element, EVENT_ZOOMED, options.zoomed, {
             once: true
@@ -2310,7 +2862,7 @@ var methods = {
    * @returns {Viewer} this
    */
   play: function play() {
-    var _this7 = this;
+    var _this10 = this;
     var fullscreen = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     if (!this.isShown || this.played) {
       return this;
@@ -2357,20 +2909,20 @@ var methods = {
     });
     if (isNumber(options.interval) && options.interval > 0) {
       var prev = function prev() {
-        clearTimeout(_this7.playing.timeout);
+        clearTimeout(_this10.playing.timeout);
         removeClass(list[index], CLASS_IN);
         index -= 1;
         index = index >= 0 ? index : total - 1;
         addClass(list[index], CLASS_IN);
-        _this7.playing.timeout = setTimeout(prev, options.interval);
+        _this10.playing.timeout = setTimeout(prev, options.interval);
       };
       var next = function next() {
-        clearTimeout(_this7.playing.timeout);
+        clearTimeout(_this10.playing.timeout);
         removeClass(list[index], CLASS_IN);
         index += 1;
         index = index < total ? index : 0;
         addClass(list[index], CLASS_IN);
-        _this7.playing.timeout = setTimeout(next, options.interval);
+        _this10.playing.timeout = setTimeout(next, options.interval);
       };
       if (total > 1) {
         this.playing = {
@@ -2384,7 +2936,7 @@ var methods = {
   },
   // Stop play
   stop: function stop() {
-    var _this8 = this;
+    var _this11 = this;
     if (!this.played) {
       return this;
     }
@@ -2403,7 +2955,7 @@ var methods = {
     this.playing = false;
     this.played = false;
     forEach(player.getElementsByTagName('img'), function (image) {
-      removeListener(image, EVENT_LOAD, _this8.onLoadWhenPlay);
+      removeListener(image, EVENT_LOAD, _this11.onLoadWhenPlay);
     });
     removeClass(player, CLASS_SHOW);
     player.innerHTML = '';
@@ -2412,7 +2964,7 @@ var methods = {
   },
   // Enter modal mode (only available in inline mode)
   full: function full() {
-    var _this9 = this;
+    var _this12 = this;
     var options = this.options,
       viewer = this.viewer,
       image = this.image,
@@ -2445,7 +2997,7 @@ var methods = {
     this.renderList();
     if (this.viewed) {
       this.initImage(function () {
-        _this9.renderImage(function () {
+        _this12.renderImage(function () {
           if (options.transition) {
             setTimeout(function () {
               addClass(image, CLASS_TRANSITION);
@@ -2459,7 +3011,7 @@ var methods = {
   },
   // Exit modal mode (only available in inline mode)
   exit: function exit() {
-    var _this10 = this;
+    var _this13 = this;
     var options = this.options,
       viewer = this.viewer,
       image = this.image,
@@ -2491,7 +3043,7 @@ var methods = {
     this.renderList();
     if (this.viewed) {
       this.initImage(function () {
-        _this10.renderImage(function () {
+        _this13.renderImage(function () {
           if (options.transition) {
             setTimeout(function () {
               addClass(image, CLASS_TRANSITION);
@@ -2505,7 +3057,7 @@ var methods = {
   },
   // Show the current ratio of the image with percentage
   tooltip: function tooltip() {
-    var _this11 = this;
+    var _this14 = this;
     var options = this.options,
       tooltipBox = this.tooltipBox,
       imageData = this.imageData;
@@ -2540,17 +3092,17 @@ var methods = {
           removeClass(tooltipBox, CLASS_FADE);
           removeClass(tooltipBox, CLASS_TRANSITION);
           tooltipBox.setAttribute('aria-hidden', true);
-          _this11.fading = false;
+          _this14.fading = false;
         }, {
           once: true
         });
         removeClass(tooltipBox, CLASS_IN);
-        _this11.fading = true;
+        _this14.fading = true;
       } else {
         removeClass(tooltipBox, CLASS_SHOW);
         tooltipBox.setAttribute('aria-hidden', true);
       }
-      _this11.tooltipping = false;
+      _this14.tooltipping = false;
     }, 1000);
     return this;
   },
@@ -2578,78 +3130,143 @@ var methods = {
   },
   // Update viewer when images changed
   update: function update() {
-    var _this12 = this;
-    var element = this.element,
-      options = this.options,
-      isImg = this.isImg;
+    var _this15 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      var element, options, isImg, images, changedIndexes, changedIndex, activeItem;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              element = _this15.element, options = _this15.options, isImg = _this15.isImg; // Destroy viewer if the target image was deleted
+              if (!(isImg && !element.parentNode)) {
+                _context6.next = 3;
+                break;
+              }
+              return _context6.abrupt("return", _this15.destroy());
+            case 3:
+              images = [];
+              _context6.next = 6;
+              return forEachAsync(isImg ? [element] : element.querySelectorAll('img'), /*#__PURE__*/function () {
+                var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(image) {
+                  return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                    while (1) {
+                      switch (_context5.prev = _context5.next) {
+                        case 0:
+                          if (!isFunction(options.filter)) {
+                            _context5.next = 4;
+                            break;
+                          }
+                          if (options.filter.call(_this15, image)) {
+                            images.push(image);
+                          }
+                          _context5.next = 8;
+                          break;
+                        case 4:
+                          _context5.next = 6;
+                          return _this15.getImageURL(image);
+                        case 6:
+                          if (!_context5.sent) {
+                            _context5.next = 8;
+                            break;
+                          }
+                          images.push(image);
+                        case 8:
+                        case "end":
+                          return _context5.stop();
+                      }
+                    }
+                  }, _callee5);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }());
+            case 6:
+              if (images.length) {
+                _context6.next = 8;
+                break;
+              }
+              return _context6.abrupt("return", _this15);
+            case 8:
+              _this15.images = images;
+              _this15.length = images.length;
+              if (!_this15.ready) {
+                _context6.next = 39;
+                break;
+              }
+              changedIndexes = [];
+              forEach(_this15.items, function (item, i) {
+                var img = item.querySelector('img');
+                var image = images[i];
+                if (image && img) {
+                  if (image.src !== img.src
 
-    // Destroy viewer if the target image was deleted
-    if (isImg && !element.parentNode) {
-      return this.destroy();
-    }
-    var images = [];
-    forEach(isImg ? [element] : element.querySelectorAll('img'), function (image) {
-      if (isFunction(options.filter)) {
-        if (options.filter.call(_this12, image)) {
-          images.push(image);
-        }
-      } else if (_this12.getImageURL(image)) {
-        images.push(image);
-      }
-    });
-    if (!images.length) {
-      return this;
-    }
-    this.images = images;
-    this.length = images.length;
-    if (this.ready) {
-      var changedIndexes = [];
-      forEach(this.items, function (item, i) {
-        var img = item.querySelector('img');
-        var image = images[i];
-        if (image && img) {
-          if (image.src !== img.src
-
-          // Title changed (#408)
-          || image.alt !== img.alt) {
-            changedIndexes.push(i);
-          }
-        } else {
-          changedIndexes.push(i);
-        }
-      });
-      setStyle(this.list, {
-        width: 'auto'
-      });
-      this.initList();
-      if (this.isShown) {
-        if (this.length) {
-          if (this.viewed) {
-            var changedIndex = changedIndexes.indexOf(this.index);
-            if (changedIndex >= 0) {
-              this.viewed = false;
-              this.view(Math.max(Math.min(this.index - changedIndex, this.length - 1), 0));
-            } else {
-              var activeItem = this.items[this.index];
-
-              // Reactivate the current viewing item after reset the list.
+                  // Title changed (#408)
+                  || image.alt !== img.alt) {
+                    changedIndexes.push(i);
+                  }
+                } else {
+                  changedIndexes.push(i);
+                }
+              });
+              setStyle(_this15.list, {
+                width: 'auto'
+              });
+              _context6.next = 16;
+              return _this15.initList();
+            case 16:
+              if (!_this15.isShown) {
+                _context6.next = 37;
+                break;
+              }
+              if (!_this15.length) {
+                _context6.next = 31;
+                break;
+              }
+              if (!_this15.viewed) {
+                _context6.next = 29;
+                break;
+              }
+              changedIndex = changedIndexes.indexOf(_this15.index);
+              if (!(changedIndex >= 0)) {
+                _context6.next = 26;
+                break;
+              }
+              _this15.viewed = false;
+              _context6.next = 24;
+              return _this15.view(Math.max(Math.min(_this15.index - changedIndex, _this15.length - 1), 0));
+            case 24:
+              _context6.next = 29;
+              break;
+            case 26:
+              activeItem = _this15.items[_this15.index]; // Reactivate the current viewing item after reset the list.
               addClass(activeItem, CLASS_ACTIVE);
               activeItem.setAttribute('aria-selected', true);
-            }
+            case 29:
+              _context6.next = 37;
+              break;
+            case 31:
+              _this15.image = null;
+              _this15.viewed = false;
+              _this15.index = 0;
+              _this15.imageData = {};
+              _this15.canvas.innerHTML = '';
+              _this15.title.innerHTML = '';
+            case 37:
+              _context6.next = 41;
+              break;
+            case 39:
+              _context6.next = 41;
+              return _this15.build();
+            case 41:
+              return _context6.abrupt("return", _this15);
+            case 42:
+            case "end":
+              return _context6.stop();
           }
-        } else {
-          this.image = null;
-          this.viewed = false;
-          this.index = 0;
-          this.imageData = {};
-          this.canvas.innerHTML = '';
-          this.title.innerHTML = '';
         }
-      }
-    } else {
-      this.build();
-    }
-    return this;
+      }, _callee6);
+    }))();
   },
   // Destroy the viewer
   destroy: function destroy() {
@@ -2703,21 +3320,55 @@ var methods = {
 
 var others = {
   getImageURL: function getImageURL(image) {
-    var url = this.options.url;
-    if (isString(url)) {
-      url = image.getAttribute(url);
-    } else if (isFunction(url)) {
-      url = url.call(this, image);
-    } else {
-      url = '';
-    }
-    return url;
+    var _this = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var url;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              url = _this.options.url;
+              if (!isString(url)) {
+                _context.next = 5;
+                break;
+              }
+              url = image.getAttribute(url);
+              _context.next = 14;
+              break;
+            case 5:
+              if (!isFunction(url)) {
+                _context.next = 13;
+                break;
+              }
+              url = url.call(_this, image);
+              if (!(url instanceof Promise)) {
+                _context.next = 11;
+                break;
+              }
+              _context.next = 10;
+              return url;
+            case 10:
+              url = _context.sent;
+            case 11:
+              _context.next = 14;
+              break;
+            case 13:
+              url = '';
+            case 14:
+              return _context.abrupt("return", url);
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   enforceFocus: function enforceFocus() {
-    var _this = this;
+    var _this2 = this;
     this.clearEnforceFocus();
     addListener(document, EVENT_FOCUSIN, this.onFocusin = function (event) {
-      var viewer = _this.viewer;
+      var viewer = _this2.viewer;
       var target = event.target;
       if (target === document || target === viewer || viewer.contains(target)) {
         return;
@@ -2753,29 +3404,49 @@ var others = {
     }
   },
   shown: function shown() {
-    var element = this.element,
-      options = this.options,
-      viewer = this.viewer;
-    this.fulled = true;
-    this.isShown = true;
-    this.render();
-    this.bind();
-    this.showing = false;
-    if (options.focus) {
-      viewer.focus();
-      this.enforceFocus();
-    }
-    if (isFunction(options.shown)) {
-      addListener(element, EVENT_SHOWN, options.shown, {
-        once: true
-      });
-    }
-    if (dispatchEvent(element, EVENT_SHOWN) === false) {
-      return;
-    }
-    if (this.ready && this.isShown && !this.hiding) {
-      this.view(this.index);
-    }
+    var _this3 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var element, options, viewer;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              element = _this3.element, options = _this3.options, viewer = _this3.viewer;
+              _this3.fulled = true;
+              _this3.isShown = true;
+              _context2.next = 5;
+              return _this3.render();
+            case 5:
+              _this3.bind();
+              _this3.showing = false;
+              if (options.focus) {
+                viewer.focus();
+                _this3.enforceFocus();
+              }
+              if (isFunction(options.shown)) {
+                addListener(element, EVENT_SHOWN, options.shown, {
+                  once: true
+                });
+              }
+              if (!(dispatchEvent(element, EVENT_SHOWN) === false)) {
+                _context2.next = 11;
+                break;
+              }
+              return _context2.abrupt("return");
+            case 11:
+              if (!(_this3.ready && _this3.isShown && !_this3.hiding)) {
+                _context2.next = 14;
+                break;
+              }
+              _context2.next = 14;
+              return _this3.view(_this3.index);
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
   },
   hidden: function hidden() {
     var element = this.element,
@@ -2942,249 +3613,343 @@ var Viewer = /*#__PURE__*/function () {
     this.wheeling = false;
     this.zooming = false;
     this.id = getUniqueID();
-    this.init();
   }
   _createClass(Viewer, [{
     key: "init",
-    value: function init() {
-      var _this = this;
-      var element = this.element,
-        options = this.options;
-      if (element[NAMESPACE]) {
-        return;
-      }
-      element[NAMESPACE] = this;
+    value: function () {
+      var _init = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var _this = this;
+        var element, options, isImg, images, count, progress;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                element = this.element, options = this.options;
+                if (!element[NAMESPACE]) {
+                  _context3.next = 3;
+                  break;
+                }
+                return _context3.abrupt("return");
+              case 3:
+                element[NAMESPACE] = this;
 
-      // The `focus` option requires the `keyboard` option set to `true`.
-      if (options.focus && !options.keyboard) {
-        options.focus = false;
-      }
-      var isImg = element.localName === 'img';
-      var images = [];
-      forEach(isImg ? [element] : element.querySelectorAll('img'), function (image) {
-        if (isFunction(options.filter)) {
-          if (options.filter.call(_this, image)) {
-            images.push(image);
-          }
-        } else if (_this.getImageURL(image)) {
-          images.push(image);
-        }
-      });
-      this.isImg = isImg;
-      this.length = images.length;
-      this.images = images;
-      this.initBody();
+                // The `focus` option requires the `keyboard` option set to `true`.
+                if (options.focus && !options.keyboard) {
+                  options.focus = false;
+                }
+                isImg = element.localName === 'img';
+                images = [];
+                _context3.next = 9;
+                return forEachAsync(isImg ? [element] : element.querySelectorAll('img'), /*#__PURE__*/function () {
+                  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(image) {
+                    return _regeneratorRuntime().wrap(function _callee$(_context) {
+                      while (1) {
+                        switch (_context.prev = _context.next) {
+                          case 0:
+                            if (!isFunction(options.filter)) {
+                              _context.next = 4;
+                              break;
+                            }
+                            if (options.filter.call(_this, image)) {
+                              images.push(image);
+                            }
+                            _context.next = 8;
+                            break;
+                          case 4:
+                            _context.next = 6;
+                            return _this.getImageURL(image);
+                          case 6:
+                            if (!_context.sent) {
+                              _context.next = 8;
+                              break;
+                            }
+                            images.push(image);
+                          case 8:
+                          case "end":
+                            return _context.stop();
+                        }
+                      }
+                    }, _callee);
+                  }));
+                  return function (_x) {
+                    return _ref.apply(this, arguments);
+                  };
+                }());
+              case 9:
+                this.isImg = isImg;
+                this.length = images.length;
+                this.images = images;
+                this.initBody();
 
-      // Override `transition` option if it is not supported
-      if (isUndefined(document.createElement(NAMESPACE).style.transition)) {
-        options.transition = false;
-      }
-      if (options.inline) {
-        var count = 0;
-        var progress = function progress() {
-          count += 1;
-          if (count === _this.length) {
-            var timeout;
-            _this.initializing = false;
-            _this.delaying = {
-              abort: function abort() {
-                clearTimeout(timeout);
-              }
-            };
+                // Override `transition` option if it is not supported
+                if (isUndefined(document.createElement(NAMESPACE).style.transition)) {
+                  options.transition = false;
+                }
+                if (options.inline) {
+                  count = 0;
+                  progress = function progress() {
+                    count += 1;
+                    if (count === _this.length) {
+                      var timeout;
+                      _this.initializing = false;
+                      _this.delaying = {
+                        abort: function abort() {
+                          clearTimeout(timeout);
+                        }
+                      };
 
-            // build asynchronously to keep `this.viewer` is accessible in `ready` event handler.
-            timeout = setTimeout(function () {
-              _this.delaying = false;
-              _this.build();
-            }, 0);
+                      // build asynchronously to keep `this.viewer` is accessible in `ready` event handler.
+                      timeout = setTimeout(function () {
+                        _this.delaying = false;
+                        _this.build();
+                      }, 0);
+                    }
+                  };
+                  this.initializing = {
+                    abort: function abort() {
+                      forEach(images, function (image) {
+                        if (!image.complete) {
+                          removeListener(image, EVENT_LOAD, progress);
+                          removeListener(image, EVENT_ERROR, progress);
+                        }
+                      });
+                    }
+                  };
+                  forEach(images, function (image) {
+                    if (image.complete) {
+                      progress();
+                    } else {
+                      var onLoad;
+                      var onError;
+                      addListener(image, EVENT_LOAD, onLoad = function onLoad() {
+                        removeListener(image, EVENT_ERROR, onError);
+                        progress();
+                      }, {
+                        once: true
+                      });
+                      addListener(image, EVENT_ERROR, onError = function onError() {
+                        removeListener(image, EVENT_LOAD, onLoad);
+                        progress();
+                      }, {
+                        once: true
+                      });
+                    }
+                  });
+                } else {
+                  addListener(element, EVENT_CLICK, this.onStart = /*#__PURE__*/function () {
+                    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(_ref2) {
+                      var target;
+                      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+                        while (1) {
+                          switch (_context2.prev = _context2.next) {
+                            case 0:
+                              target = _ref2.target;
+                              if (!(target.localName === 'img' && (!isFunction(options.filter) || options.filter.call(_this, target)))) {
+                                _context2.next = 4;
+                                break;
+                              }
+                              _context2.next = 4;
+                              return _this.view(_this.images.indexOf(target));
+                            case 4:
+                            case "end":
+                              return _context2.stop();
+                          }
+                        }
+                      }, _callee2);
+                    }));
+                    return function (_x2) {
+                      return _ref3.apply(this, arguments);
+                    };
+                  }());
+                }
+              case 15:
+              case "end":
+                return _context3.stop();
+            }
           }
-        };
-        this.initializing = {
-          abort: function abort() {
-            forEach(images, function (image) {
-              if (!image.complete) {
-                removeListener(image, EVENT_LOAD, progress);
-                removeListener(image, EVENT_ERROR, progress);
-              }
-            });
-          }
-        };
-        forEach(images, function (image) {
-          if (image.complete) {
-            progress();
-          } else {
-            var onLoad;
-            var onError;
-            addListener(image, EVENT_LOAD, onLoad = function onLoad() {
-              removeListener(image, EVENT_ERROR, onError);
-              progress();
-            }, {
-              once: true
-            });
-            addListener(image, EVENT_ERROR, onError = function onError() {
-              removeListener(image, EVENT_LOAD, onLoad);
-              progress();
-            }, {
-              once: true
-            });
-          }
-        });
-      } else {
-        addListener(element, EVENT_CLICK, this.onStart = function (_ref) {
-          var target = _ref.target;
-          if (target.localName === 'img' && (!isFunction(options.filter) || options.filter.call(_this, target))) {
-            _this.view(_this.images.indexOf(target));
-          }
-        });
+        }, _callee3, this);
+      }));
+      function init() {
+        return _init.apply(this, arguments);
       }
-    }
+      return init;
+    }()
   }, {
     key: "build",
-    value: function build() {
-      if (this.ready) {
-        return;
-      }
-      var element = this.element,
-        options = this.options;
-      var parent = element.parentNode;
-      var template = document.createElement('div');
-      template.innerHTML = TEMPLATE;
-      var viewer = template.querySelector(".".concat(NAMESPACE, "-container"));
-      var title = viewer.querySelector(".".concat(NAMESPACE, "-title"));
-      var toolbar = viewer.querySelector(".".concat(NAMESPACE, "-toolbar"));
-      var navbar = viewer.querySelector(".".concat(NAMESPACE, "-navbar"));
-      var button = viewer.querySelector(".".concat(NAMESPACE, "-button"));
-      var canvas = viewer.querySelector(".".concat(NAMESPACE, "-canvas"));
-      this.parent = parent;
-      this.viewer = viewer;
-      this.title = title;
-      this.toolbar = toolbar;
-      this.navbar = navbar;
-      this.button = button;
-      this.canvas = canvas;
-      this.footer = viewer.querySelector(".".concat(NAMESPACE, "-footer"));
-      this.tooltipBox = viewer.querySelector(".".concat(NAMESPACE, "-tooltip"));
-      this.player = viewer.querySelector(".".concat(NAMESPACE, "-player"));
-      this.list = viewer.querySelector(".".concat(NAMESPACE, "-list"));
-      viewer.id = "".concat(NAMESPACE).concat(this.id);
-      title.id = "".concat(NAMESPACE, "Title").concat(this.id);
-      addClass(title, !options.title ? CLASS_HIDE : getResponsiveClass(Array.isArray(options.title) ? options.title[0] : options.title));
-      addClass(navbar, !options.navbar ? CLASS_HIDE : getResponsiveClass(options.navbar));
-      toggleClass(button, CLASS_HIDE, !options.button);
-      if (options.keyboard) {
-        button.setAttribute('tabindex', 0);
-      }
-      if (options.backdrop) {
-        addClass(viewer, "".concat(NAMESPACE, "-backdrop"));
-        if (!options.inline && options.backdrop !== 'static') {
-          setData(canvas, DATA_ACTION, 'hide');
-        }
-      }
-      if (isString(options.className) && options.className) {
-        // In case there are multiple class names
-        options.className.split(REGEXP_SPACES).forEach(function (className) {
-          addClass(viewer, className);
-        });
-      }
-      if (options.toolbar) {
-        var list = document.createElement('ul');
-        var custom = isPlainObject(options.toolbar);
-        var zoomButtons = BUTTONS.slice(0, 3);
-        var rotateButtons = BUTTONS.slice(7, 9);
-        var scaleButtons = BUTTONS.slice(9);
-        if (!custom) {
-          addClass(toolbar, getResponsiveClass(options.toolbar));
-        }
-        forEach(custom ? options.toolbar : BUTTONS, function (value, index) {
-          var deep = custom && isPlainObject(value);
-          var name = custom ? hyphenate(index) : value;
-          var show = deep && !isUndefined(value.show) ? value.show : value;
-          if (!show || !options.zoomable && zoomButtons.indexOf(name) !== -1 || !options.rotatable && rotateButtons.indexOf(name) !== -1 || !options.scalable && scaleButtons.indexOf(name) !== -1) {
-            return;
+    value: function () {
+      var _build = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var element, options, parent, template, viewer, title, toolbar, navbar, button, canvas, list, custom, zoomButtons, rotateButtons, scaleButtons, rotates, container;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                if (!this.ready) {
+                  _context4.next = 2;
+                  break;
+                }
+                return _context4.abrupt("return");
+              case 2:
+                element = this.element, options = this.options;
+                parent = element.parentNode;
+                template = document.createElement('div');
+                template.innerHTML = TEMPLATE;
+                viewer = template.querySelector(".".concat(NAMESPACE, "-container"));
+                title = viewer.querySelector(".".concat(NAMESPACE, "-title"));
+                toolbar = viewer.querySelector(".".concat(NAMESPACE, "-toolbar"));
+                navbar = viewer.querySelector(".".concat(NAMESPACE, "-navbar"));
+                button = viewer.querySelector(".".concat(NAMESPACE, "-button"));
+                canvas = viewer.querySelector(".".concat(NAMESPACE, "-canvas"));
+                this.parent = parent;
+                this.viewer = viewer;
+                this.title = title;
+                this.toolbar = toolbar;
+                this.navbar = navbar;
+                this.button = button;
+                this.canvas = canvas;
+                this.footer = viewer.querySelector(".".concat(NAMESPACE, "-footer"));
+                this.tooltipBox = viewer.querySelector(".".concat(NAMESPACE, "-tooltip"));
+                this.player = viewer.querySelector(".".concat(NAMESPACE, "-player"));
+                this.list = viewer.querySelector(".".concat(NAMESPACE, "-list"));
+                viewer.id = "".concat(NAMESPACE).concat(this.id);
+                title.id = "".concat(NAMESPACE, "Title").concat(this.id);
+                addClass(title, !options.title ? CLASS_HIDE : getResponsiveClass(Array.isArray(options.title) ? options.title[0] : options.title));
+                addClass(navbar, !options.navbar ? CLASS_HIDE : getResponsiveClass(options.navbar));
+                toggleClass(button, CLASS_HIDE, !options.button);
+                if (options.keyboard) {
+                  button.setAttribute('tabindex', 0);
+                }
+                if (options.backdrop) {
+                  addClass(viewer, "".concat(NAMESPACE, "-backdrop"));
+                  if (!options.inline && options.backdrop !== 'static') {
+                    setData(canvas, DATA_ACTION, 'hide');
+                  }
+                }
+                if (isString(options.className) && options.className) {
+                  // In case there are multiple class names
+                  options.className.split(REGEXP_SPACES).forEach(function (className) {
+                    addClass(viewer, className);
+                  });
+                }
+                if (options.toolbar) {
+                  list = document.createElement('ul');
+                  custom = isPlainObject(options.toolbar);
+                  zoomButtons = BUTTONS.slice(0, 3);
+                  rotateButtons = BUTTONS.slice(7, 9);
+                  scaleButtons = BUTTONS.slice(9);
+                  if (!custom) {
+                    addClass(toolbar, getResponsiveClass(options.toolbar));
+                  }
+                  forEach(custom ? options.toolbar : BUTTONS, function (value, index) {
+                    var deep = custom && isPlainObject(value);
+                    var name = custom ? hyphenate(index) : value;
+                    var show = deep && !isUndefined(value.show) ? value.show : value;
+                    if (!show || !options.zoomable && zoomButtons.indexOf(name) !== -1 || !options.rotatable && rotateButtons.indexOf(name) !== -1 || !options.scalable && scaleButtons.indexOf(name) !== -1) {
+                      return;
+                    }
+                    var size = deep && !isUndefined(value.size) ? value.size : value;
+                    var click = deep && !isUndefined(value.click) ? value.click : value;
+                    var item = document.createElement('li');
+                    if (options.keyboard) {
+                      item.setAttribute('tabindex', 0);
+                    }
+                    item.setAttribute('role', 'button');
+                    addClass(item, "".concat(NAMESPACE, "-").concat(name));
+                    if (!isFunction(click)) {
+                      setData(item, DATA_ACTION, name);
+                    }
+                    if (isNumber(show)) {
+                      addClass(item, getResponsiveClass(show));
+                    }
+                    if (['small', 'large'].indexOf(size) !== -1) {
+                      addClass(item, "".concat(NAMESPACE, "-").concat(size));
+                    } else if (name === 'play') {
+                      addClass(item, "".concat(NAMESPACE, "-large"));
+                    }
+                    if (isFunction(click)) {
+                      addListener(item, EVENT_CLICK, click);
+                    }
+                    list.appendChild(item);
+                  });
+                  toolbar.appendChild(list);
+                } else {
+                  addClass(toolbar, CLASS_HIDE);
+                }
+                if (!options.rotatable) {
+                  rotates = toolbar.querySelectorAll('li[class*="rotate"]');
+                  addClass(rotates, CLASS_INVISIBLE);
+                  forEach(rotates, function (rotate) {
+                    toolbar.appendChild(rotate);
+                  });
+                }
+                if (options.inline) {
+                  addClass(button, CLASS_FULLSCREEN);
+                  setStyle(viewer, {
+                    zIndex: options.zIndexInline
+                  });
+                  if (window.getComputedStyle(parent).position === 'static') {
+                    setStyle(parent, {
+                      position: 'relative'
+                    });
+                  }
+                  parent.insertBefore(viewer, element.nextSibling);
+                } else {
+                  addClass(button, CLASS_CLOSE);
+                  addClass(viewer, CLASS_FIXED);
+                  addClass(viewer, CLASS_FADE);
+                  addClass(viewer, CLASS_HIDE);
+                  setStyle(viewer, {
+                    zIndex: options.zIndex
+                  });
+                  container = options.container;
+                  if (isString(container)) {
+                    container = element.ownerDocument.querySelector(container);
+                  }
+                  if (!container) {
+                    container = this.body;
+                  }
+                  container.appendChild(viewer);
+                }
+                if (!options.inline) {
+                  _context4.next = 39;
+                  break;
+                }
+                _context4.next = 37;
+                return this.render();
+              case 37:
+                this.bind();
+                this.isShown = true;
+              case 39:
+                this.ready = true;
+                if (isFunction(options.ready)) {
+                  addListener(element, EVENT_READY, options.ready, {
+                    once: true
+                  });
+                }
+                if (!(dispatchEvent(element, EVENT_READY) === false)) {
+                  _context4.next = 44;
+                  break;
+                }
+                this.ready = false;
+                return _context4.abrupt("return");
+              case 44:
+                if (!(this.ready && options.inline)) {
+                  _context4.next = 47;
+                  break;
+                }
+                _context4.next = 47;
+                return this.view(this.index);
+              case 47:
+              case "end":
+                return _context4.stop();
+            }
           }
-          var size = deep && !isUndefined(value.size) ? value.size : value;
-          var click = deep && !isUndefined(value.click) ? value.click : value;
-          var item = document.createElement('li');
-          if (options.keyboard) {
-            item.setAttribute('tabindex', 0);
-          }
-          item.setAttribute('role', 'button');
-          addClass(item, "".concat(NAMESPACE, "-").concat(name));
-          if (!isFunction(click)) {
-            setData(item, DATA_ACTION, name);
-          }
-          if (isNumber(show)) {
-            addClass(item, getResponsiveClass(show));
-          }
-          if (['small', 'large'].indexOf(size) !== -1) {
-            addClass(item, "".concat(NAMESPACE, "-").concat(size));
-          } else if (name === 'play') {
-            addClass(item, "".concat(NAMESPACE, "-large"));
-          }
-          if (isFunction(click)) {
-            addListener(item, EVENT_CLICK, click);
-          }
-          list.appendChild(item);
-        });
-        toolbar.appendChild(list);
-      } else {
-        addClass(toolbar, CLASS_HIDE);
+        }, _callee4, this);
+      }));
+      function build() {
+        return _build.apply(this, arguments);
       }
-      if (!options.rotatable) {
-        var rotates = toolbar.querySelectorAll('li[class*="rotate"]');
-        addClass(rotates, CLASS_INVISIBLE);
-        forEach(rotates, function (rotate) {
-          toolbar.appendChild(rotate);
-        });
-      }
-      if (options.inline) {
-        addClass(button, CLASS_FULLSCREEN);
-        setStyle(viewer, {
-          zIndex: options.zIndexInline
-        });
-        if (window.getComputedStyle(parent).position === 'static') {
-          setStyle(parent, {
-            position: 'relative'
-          });
-        }
-        parent.insertBefore(viewer, element.nextSibling);
-      } else {
-        addClass(button, CLASS_CLOSE);
-        addClass(viewer, CLASS_FIXED);
-        addClass(viewer, CLASS_FADE);
-        addClass(viewer, CLASS_HIDE);
-        setStyle(viewer, {
-          zIndex: options.zIndex
-        });
-        var container = options.container;
-        if (isString(container)) {
-          container = element.ownerDocument.querySelector(container);
-        }
-        if (!container) {
-          container = this.body;
-        }
-        container.appendChild(viewer);
-      }
-      if (options.inline) {
-        this.render();
-        this.bind();
-        this.isShown = true;
-      }
-      this.ready = true;
-      if (isFunction(options.ready)) {
-        addListener(element, EVENT_READY, options.ready, {
-          once: true
-        });
-      }
-      if (dispatchEvent(element, EVENT_READY) === false) {
-        this.ready = false;
-        return;
-      }
-      if (this.ready && options.inline) {
-        this.view(this.index);
-      }
-    }
-
+      return build;
+    }()
     /**
      * Get the no conflict viewer class.
      * @returns {Viewer} The viewer class.

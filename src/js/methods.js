@@ -36,6 +36,7 @@ import {
   dispatchEvent,
   escapeHTMLEntities,
   forEach,
+  forEachAsync,
   getData,
   getOffset,
   getPointersCenter,
@@ -55,7 +56,7 @@ export default {
    * @param {boolean} [immediate=false] - Indicates if show the viewer immediately or not.
    * @returns {Viewer} this
    */
-  show(immediate = false) {
+  async show(immediate = false) {
     const { element, options } = this;
 
     if (options.inline || this.showing || this.isShown || this.showing) {
@@ -63,10 +64,10 @@ export default {
     }
 
     if (!this.ready) {
-      this.build();
+      await this.build();
 
       if (this.ready) {
-        this.show(immediate);
+        await this.show(immediate);
       }
 
       return this;
@@ -117,7 +118,7 @@ export default {
       addClass(viewer, CLASS_IN);
     } else {
       addClass(viewer, CLASS_IN);
-      this.shown();
+      await this.shown();
     }
 
     return this;
@@ -213,7 +214,7 @@ export default {
    * @param {number} index - The index of the image to view.
    * @returns {Viewer} this
    */
-  view(index = this.options.initialViewIndex) {
+  async view(index = this.options.initialViewIndex) {
     index = Number(index) || 0;
 
     if (this.hiding || this.played || index < 0 || index >= this.length
@@ -223,7 +224,7 @@ export default {
 
     if (!this.isShown) {
       this.index = index;
-      return this.show();
+      return await this.show();
     }
 
     if (this.viewing) {
@@ -384,14 +385,14 @@ export default {
    * when it is the first one at present.
    * @returns {Viewer} this
    */
-  prev(loop = false) {
+  async prev(loop = false) {
     let index = this.index - 1;
 
     if (index < 0) {
       index = loop ? this.length - 1 : 0;
     }
 
-    this.view(index);
+    await this.view(index);
     return this;
   },
 
@@ -401,7 +402,7 @@ export default {
    * when it is the last one at present.
    * @returns {Viewer} this
    */
-  next(loop = false) {
+  async next(loop = false) {
     const maxIndex = this.length - 1;
     let index = this.index + 1;
 
@@ -409,7 +410,7 @@ export default {
       index = loop ? 0 : maxIndex;
     }
 
-    this.view(index);
+    await this.view(index);
     return this;
   },
 
@@ -1141,7 +1142,7 @@ export default {
   },
 
   // Update viewer when images changed
-  update() {
+  async update() {
     const { element, options, isImg } = this;
 
     // Destroy viewer if the target image was deleted
@@ -1151,12 +1152,12 @@ export default {
 
     const images = [];
 
-    forEach(isImg ? [element] : element.querySelectorAll('img'), (image) => {
+    await forEachAsync(isImg ? [element] : element.querySelectorAll('img'), async (image) => {
       if (isFunction(options.filter)) {
         if (options.filter.call(this, image)) {
           images.push(image);
         }
-      } else if (this.getImageURL(image)) {
+      } else if (await this.getImageURL(image)) {
         images.push(image);
       }
     });
@@ -1193,7 +1194,7 @@ export default {
         width: 'auto',
       });
 
-      this.initList();
+      await this.initList();
 
       if (this.isShown) {
         if (this.length) {
@@ -1202,7 +1203,7 @@ export default {
 
             if (changedIndex >= 0) {
               this.viewed = false;
-              this.view(Math.max(Math.min(this.index - changedIndex, this.length - 1), 0));
+              await this.view(Math.max(Math.min(this.index - changedIndex, this.length - 1), 0));
             } else {
               const activeItem = this.items[this.index];
 
@@ -1221,7 +1222,7 @@ export default {
         }
       }
     } else {
-      this.build();
+      await this.build();
     }
 
     return this;

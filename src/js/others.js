@@ -22,13 +22,14 @@ import {
 } from './utilities';
 
 export default {
-  getImageURL(image) {
+  async getImageURL(image) {
     let { url } = this.options;
 
     if (isString(url)) {
       url = image.getAttribute(url);
     } else if (isFunction(url)) {
       url = url.call(this, image);
+      if (url instanceof Promise) url = await url;
     } else {
       url = '';
     }
@@ -86,12 +87,12 @@ export default {
     }
   },
 
-  shown() {
+  async shown() {
     const { element, options, viewer } = this;
 
     this.fulled = true;
     this.isShown = true;
-    this.render();
+    await this.render();
     this.bind();
     this.showing = false;
 
@@ -111,7 +112,7 @@ export default {
     }
 
     if (this.ready && this.isShown && !this.hiding) {
-      this.view(this.index);
+      await this.view(this.index);
     }
   },
 

@@ -107,6 +107,35 @@ export function forEach(data, callback) {
 }
 
 /**
+ * Iterate the given data.
+ * @param {*} data - The data to iterate.
+ * @param {Function} callback - The process function for each element.
+ * @returns {*} The original data.
+ */
+export async function forEachAsync(data, callback) {
+  if (data && isFunction(callback)) {
+    if (Array.isArray(data) || isNumber(data.length)/* array-like */) {
+      const { length } = data;
+      let i;
+
+      for (i = 0; i < length; i += 1) {
+        let re = callback.call(data, data[i], i, data);
+        if (re instanceof Promise) re = await re;
+        if (re === false) {
+          break;
+        }
+      }
+    } else if (isObject(data)) {
+      Object.keys(data).forEach((key) => {
+        callback.call(data, data[key], key, data);
+      });
+    }
+  }
+
+  return data;
+}
+
+/**
  * Extend the given object.
  * @param {*} obj - The object to be extended.
  * @param {*} args - The rest objects which will be merged to the first object.

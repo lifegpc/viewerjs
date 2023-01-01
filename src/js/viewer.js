@@ -28,6 +28,7 @@ import {
   assign,
   dispatchEvent,
   forEach,
+  forEachAsync,
   getResponsiveClass,
   hyphenate,
   isFunction,
@@ -85,10 +86,9 @@ class Viewer {
     this.wheeling = false;
     this.zooming = false;
     this.id = getUniqueID();
-    this.init();
   }
 
-  init() {
+  async init() {
     const { element, options } = this;
 
     if (element[NAMESPACE]) {
@@ -105,12 +105,12 @@ class Viewer {
     const isImg = element.localName === 'img';
     const images = [];
 
-    forEach(isImg ? [element] : element.querySelectorAll('img'), (image) => {
+    await forEachAsync(isImg ? [element] : element.querySelectorAll('img'), async (image) => {
       if (isFunction(options.filter)) {
         if (options.filter.call(this, image)) {
           images.push(image);
         }
-      } else if (this.getImageURL(image)) {
+      } else if (await this.getImageURL(image)) {
         images.push(image);
       }
     });
@@ -181,15 +181,15 @@ class Viewer {
         }
       });
     } else {
-      addListener(element, EVENT_CLICK, (this.onStart = ({ target }) => {
+      addListener(element, EVENT_CLICK, (this.onStart = async ({ target }) => {
         if (target.localName === 'img' && (!isFunction(options.filter) || options.filter.call(this, target))) {
-          this.view(this.images.indexOf(target));
+          await this.view(this.images.indexOf(target));
         }
       }));
     }
   }
 
-  build() {
+  async build() {
     if (this.ready) {
       return;
     }
@@ -354,7 +354,7 @@ class Viewer {
     }
 
     if (options.inline) {
-      this.render();
+      await this.render();
       this.bind();
       this.isShown = true;
     }
@@ -373,7 +373,7 @@ class Viewer {
     }
 
     if (this.ready && options.inline) {
-      this.view(this.index);
+      await this.view(this.index);
     }
   }
 
